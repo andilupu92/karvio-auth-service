@@ -1,8 +1,6 @@
 package auto.trace.service;
 
-import auto.trace.dto.LoginRequest;
-import auto.trace.dto.RegisterRequest;
-import auto.trace.dto.TokenResponse;
+import auto.trace.dto.*;
 import auto.trace.entity.Role;
 import auto.trace.entity.User;
 import auto.trace.enums.RoleName;
@@ -28,13 +26,15 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
+    private final CustomUserDetailsService customUserDetailsService;
 
-    public AuthService(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, JwtUtil jwtUtil, AuthenticationManager authenticationManager) {
+    public AuthService(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, JwtUtil jwtUtil, AuthenticationManager authenticationManager, CustomUserDetailsService customUserDetailsService) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtUtil = jwtUtil;
         this.authenticationManager = authenticationManager;
+        this.customUserDetailsService = customUserDetailsService;
     }
 
     public String register(RegisterRequest request) {
@@ -70,5 +70,25 @@ public class AuthService {
         String refreshToken = jwtUtil.generateRefreshToken(authentication);
 
         return new TokenResponse(accessToken, refreshToken);
+    }
+
+    public RefreshTokenResponse refreshToken(RefreshTokenRequest request) {
+        String refreshToken = request.refreshToken();
+
+        if (refreshToken != null && jwtUtil.validateToken(refreshToken)) {
+            String email = jwtUtil.getEmailFromToken(refreshToken);
+
+            CustomUserDetails userDetails = (CustomUserDetails) customUserDetailsService.loadUserByUsername(email);
+
+            Authentication authentication = new UsernamePasswordAuthenticationToken(
+                    userDetails, null, userDetails.getAuthorities());
+
+            String newAccessToken = jwtUtil.generateAccessToken(authentication);
+            String newRefreshToken = jwtUtil.generateRefreshToken(authentication);
+
+            return new RefreshTokenResponse(newAccessToken, newRefreshToken);
+        }
+
+        throw new RuntimeException("Refresh token is invalid or expired!");
     }
 }

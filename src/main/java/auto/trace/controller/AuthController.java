@@ -1,8 +1,6 @@
 package auto.trace.controller;
 
-import auto.trace.dto.LoginRequest;
-import auto.trace.dto.RegisterRequest;
-import auto.trace.dto.TokenResponse;
+import auto.trace.dto.*;
 import auto.trace.service.AuthService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -26,5 +24,10 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<TokenResponse> login(@RequestBody LoginRequest loginRequest) {
         return new ResponseEntity<>(authService.login(loginRequest), HttpStatus.ACCEPTED);
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<RefreshTokenResponse> refresh(@RequestBody RefreshTokenRequest request) {
+        return new ResponseEntity<>(authService.refreshToken(request), HttpStatus.OK);
     }
 }

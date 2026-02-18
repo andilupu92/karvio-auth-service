@@ -46,5 +46,21 @@ public class JwtUtil {
                 .sign(Algorithm.HMAC256(secret));
     }
 
+    public String getEmailFromToken(String token) {
+        return JWT.require(Algorithm.HMAC256(secret))
+                .build()
+                .verify(token)
+                .getSubject();
+    }
+
+    public boolean validateToken(String token) {
+        try {
+            JWT.require(Algorithm.HMAC256(secret)).build().verify(token);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
 }
 
