@@ -50,14 +50,14 @@ public class User {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, email); // NU include roles!
+        return Objects.hash(id, email);
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof User user)) return false;
-        return Objects.equals(id, user.id); // NU include roles!
+        return Objects.equals(id, user.id);
     }
 
     @Override
