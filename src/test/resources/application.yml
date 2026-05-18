@@ -1,6 +1,9 @@
 server:
   port: 8082
 
+jwt:
+  secret: "12345678901234567890123456789012"
+
 spring:
   application:
     name: auto-auth-service
