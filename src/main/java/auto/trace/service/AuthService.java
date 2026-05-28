@@ -1,12 +1,16 @@
 package auto.trace.service;
 
+import auto.trace.client.CarServiceClient;
+import auto.trace.client.DocumentServiceClient;
 import auto.trace.dto.*;
 import auto.trace.entity.Role;
 import auto.trace.entity.User;
 import auto.trace.enums.RoleName;
+import auto.trace.exception.ResourceNotFoundException;
 import auto.trace.repository.RoleRepository;
 import auto.trace.repository.UserRepository;
 import auto.trace.security.JwtUtil;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -14,11 +18,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.Set;
 
 @Service
+@RequiredArgsConstructor
 public class AuthService {
 
     private final UserRepository userRepository;
@@ -27,15 +33,8 @@ public class AuthService {
     private final JwtUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
     private final CustomUserDetailsService customUserDetailsService;
-
-    public AuthService(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, JwtUtil jwtUtil, AuthenticationManager authenticationManager, CustomUserDetailsService customUserDetailsService) {
-        this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.jwtUtil = jwtUtil;
-        this.authenticationManager = authenticationManager;
-        this.customUserDetailsService = customUserDetailsService;
-    }
+    private final DocumentServiceClient documentServiceClient;
+    private final CarServiceClient carServiceClient;
 
     public String register(RegisterRequest request) {
 
@@ -90,5 +89,22 @@ public class AuthService {
         }
 
         throw new RuntimeException("Refresh token is invalid or expired!");
+    }
+
+    @Transactional
+    public void delete(Long userId) {
+        try {
+            if (!userRepository.existsById(userId)) {
+                throw new ResourceNotFoundException("User not found with id: " + userId);
+            }
+
+            documentServiceClient.deleteAllDocumentsAndExpensesByUser(userId);
+            carServiceClient.deleteAllCarsByUser(userId);
+            userRepository.deleteById(userId);
+
+        } catch (Exception e) {
+            throw new RuntimeException("Deletion failed, rolled back", e);
+        }
+
     }
 }

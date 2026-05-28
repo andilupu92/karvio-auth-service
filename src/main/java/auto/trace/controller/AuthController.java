@@ -30,4 +30,10 @@ public class AuthController {
     public ResponseEntity<RefreshTokenResponse> refresh(@RequestBody RefreshTokenRequest request) {
         return new ResponseEntity<>(authService.refreshToken(request), HttpStatus.OK);
     }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<Void> delete(@RequestHeader("X-User-Id") Long userId) {
+        authService.delete(userId);
+        return ResponseEntity.noContent().build();
+    }
 }

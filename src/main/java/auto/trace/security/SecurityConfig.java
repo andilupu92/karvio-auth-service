@@ -1,6 +1,8 @@
 package auto.trace.security;
 
 import auto.trace.service.CustomUserDetailsService;
+import feign.RequestInterceptor;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -14,6 +16,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 @Configuration
 public class SecurityConfig {
@@ -64,5 +68,31 @@ public class SecurityConfig {
                 .authenticationProvider(authenticationProvider());
 
         return http.build();
+    }
+
+    @Bean
+    public RequestInterceptor feignHeaderPropagationInterceptor() {
+        return requestTemplate -> {
+            ServletRequestAttributes attributes = (ServletRequestAttributes)
+                    RequestContextHolder.getRequestAttributes();
+
+            if (attributes != null) {
+                HttpServletRequest request = attributes.getRequest();
+
+                String userId = request.getHeader("X-User-Id");
+                String username = request.getHeader("X-User-Name");
+                String roles = request.getHeader("X-User-Roles");
+
+                if (userId != null) {
+                    requestTemplate.header("X-User-Id", userId);
+                }
+                if (username != null) {
+                    requestTemplate.header("X-User-Name", username);
+                }
+                if (roles != null) {
+                    requestTemplate.header("X-User-Roles", roles);
+                }
+            }
+        };
     }
 }
