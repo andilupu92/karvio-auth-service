@@ -4,6 +4,21 @@ server:
 spring:
   application:
     name: auto-auth-service
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: andilupu92@gmail.com
+    password: miryrikyypjnnfrb
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+otp:
+  expiration:
+    minutes: 10
 
 jwt:
   secret: "12345678901234567890123456789012"
