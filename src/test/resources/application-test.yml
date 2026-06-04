@@ -1,0 +1,25 @@
+server:
+  port: 8082
+
+jwt:
+  secret: "12345678901234567890123456789012"
+
+spring:
+  application:
+    name: karvio-auth-service
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: auth
+    password:
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+
+management:
+  health:
+    consul:
+      enabled: false
+

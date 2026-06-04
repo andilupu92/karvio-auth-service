@@ -1,7 +1,7 @@
 spring:
   config:
     activate:
-      on-profile: docker
+      on-profile: prod
 
   datasource:
     url: jdbc:postgresql://${DB_HOST}:5432/${DB_NAME}
@@ -36,5 +36,6 @@ spring:
 # Logging for debugging
 logging:
   level:
-    org.springframework.cloud.consul: DEBUG
-    org.springframework.web: INFO
+    root: INFO
+    org.springframework.cloud.consul: WARN
+    org.springframework.cloud.gateway: WARN

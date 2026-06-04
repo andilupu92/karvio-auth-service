@@ -1,4 +1,4 @@
-name: auto-auth-service CI Pipeline
+name: karvio-auth-service CI Pipeline
 
 on:
   push:
