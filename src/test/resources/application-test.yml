@@ -5,6 +5,8 @@ jwt:
   secret: "12345678901234567890123456789012"
 
 spring:
+  flyway:
+    enabled: false
   application:
     name: karvio-auth-service
   datasource:
@@ -33,4 +35,3 @@ management:
   health:
     consul:
       enabled: false
-
