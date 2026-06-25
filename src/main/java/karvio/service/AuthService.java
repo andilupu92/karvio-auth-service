@@ -5,6 +5,7 @@ import karvio.client.DocumentServiceClient;
 import karvio.dto.*;
 import karvio.entity.Role;
 import karvio.entity.User;
+import karvio.enums.AuthProvider;
 import karvio.enums.RoleName;
 import karvio.exception.ResourceNotFoundException;
 import karvio.repository.RoleRepository;
@@ -48,6 +49,7 @@ public class AuthService {
         User user = new User();
         user.setPassword(passwordEncoder.encode(request.password()));
         user.setEmail(request.email());
+        user.setProvider(AuthProvider.LOCAL);
         Set<Role> roles = new HashSet<>();
         roles.add(role);
         user.setRoles(roles);

@@ -1,6 +1,7 @@
 package karvio.entity;
 
 import jakarta.persistence.*;
+import karvio.enums.AuthProvider;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -25,6 +26,10 @@ public class User {
 
     @Column(nullable = false)
     private String password;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 50)
+    private AuthProvider provider;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(

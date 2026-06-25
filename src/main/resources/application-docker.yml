@@ -38,6 +38,9 @@ spring:
         health-check-critical-timeout: 30s
         service-name: ${spring.application.name}
 
+webClient:
+  id: "189896588323-5966988c9ihv76865m52jdml49nfo4jt.apps.googleusercontent.com"
+
 # Logging for debugging
 logging:
   level:
