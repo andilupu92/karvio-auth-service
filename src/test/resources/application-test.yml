@@ -4,6 +4,9 @@ server:
 jwt:
   secret: "12345678901234567890123456789012"
 
+webClient:
+  id: "189896588323-5966988c9ihv76865m52jdml49nfo4jt.apps.googleusercontent.com"
+
 spring:
   flyway:
     enabled: false
