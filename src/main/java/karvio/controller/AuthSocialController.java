@@ -17,7 +17,7 @@ public class AuthSocialController {
 
     private final AuthSocialService authSocialService;
 
-    public AuthSocialController(AuthSocialService authSocialService) {
+    AuthSocialController(AuthSocialService authSocialService) {
         this.authSocialService = authSocialService;
     }
 
