@@ -6,7 +6,7 @@ spring:
     name: karvio-auth-service
   mail:
     host: mail.karvio.ro
-    port: 465
+    port: 587
     username: ${EMAIL_USERNAME}
     password: ${EMAIL_PASSWORD}
     properties:
@@ -15,6 +15,7 @@ spring:
           auth: true
           starttls:
             enable: true
+            required: true
 
 otp:
   expiration:
