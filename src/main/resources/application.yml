@@ -5,8 +5,8 @@ spring:
   application:
     name: karvio-auth-service
   mail:
-    host: smtp.gmail.com
-    port: 587
+    host: mail.karvio.ro
+    port: 465
     username: ${EMAIL_USERNAME}
     password: ${EMAIL_PASSWORD}
     properties:
